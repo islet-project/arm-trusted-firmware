@@ -441,6 +441,14 @@ ifneq (${RESET_TO_BL2}, 0)
     override BL1_SOURCES =
 endif
 
+# RSS is not supported on FVP right now. Thus, we use the mocked version
+# of the provided PSA APIs. They return with success and hard-coded token/key.
+PLAT_RSS_NOT_SUPPORTED	:= 1
+
+# RSS though can be partially supported on FVP when we use serial port instead
+# of MHU and forward those messages to some external RSS.
+PLAT_RSS_COMMS_USE_SERIAL := 0
+
 # Include Measured Boot makefile before any Crypto library makefile.
 # Crypto library makefile may need default definitions of Measured Boot build
 # flags present in Measured Boot makefile.
@@ -468,6 +476,29 @@ BL1_SOURCES		+=	plat/arm/board/fvp/fvp_common_measured_boot.c	\
 BL2_SOURCES		+=	plat/arm/board/fvp/fvp_common_measured_boot.c	\
 				plat/arm/board/fvp/fvp_bl2_measured_boot.c	\
 				lib/psa/measured_boot.c
+endif
+
+# Even though RSS is not supported on FVP (see above), we support overriding
+# PLAT_RSS_NOT_SUPPORTED from the command line, just for the purpose of building
+# the code to detect any build regressions. The resulting firmware will not be
+# functional.
+ifneq (${PLAT_RSS_NOT_SUPPORTED},1)
+    $(warning "RSS is not supported on FVP. The firmware will not be functional.")
+    include drivers/arm/rss/rss_comms.mk
+    BL1_SOURCES		+=	${RSS_COMMS_SOURCES}
+    BL2_SOURCES		+=	${RSS_COMMS_SOURCES}
+    BL31_SOURCES	+=	${RSS_COMMS_SOURCES}
+
+    BL1_CFLAGS		+=	-DPLAT_RSS_COMMS_PAYLOAD_MAX_SIZE=0x1000
+    BL2_CFLAGS		+=	-DPLAT_RSS_COMMS_PAYLOAD_MAX_SIZE=0x1000
+    BL31_CFLAGS		+=	-DPLAT_RSS_COMMS_PAYLOAD_MAX_SIZE=0x1000
+
+ifneq (${PLAT_RSS_COMMS_USE_SERIAL},0)
+    $(warning "... unless you use serial instead of MHU, then it might be.")
+    BL1_CFLAGS		+=	-DPLAT_RSS_COMMS_USE_SERIAL=1
+    BL2_CFLAGS		+=	-DPLAT_RSS_COMMS_USE_SERIAL=1
+    BL31_CFLAGS		+=	-DPLAT_RSS_COMMS_USE_SERIAL=1
+endif
 endif
 
 ifeq (${DRTM_SUPPORT}, 1)
