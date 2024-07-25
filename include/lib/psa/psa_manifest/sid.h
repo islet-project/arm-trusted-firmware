@@ -20,4 +20,7 @@
 /******** PSA_SP_DELAGATED_ATTESTATION ********/
 #define RSS_DELEGATED_SERVICE_HANDLE			(0x40000111U)
 
+/******** PSA_SP_VHUK ********/
+#define RSS_VHUK_SERVICE_HANDLE			(0x40000112U)
+
 #endif /* PSA_MANIFEST_SID_H */

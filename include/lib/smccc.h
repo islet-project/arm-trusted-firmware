@@ -95,6 +95,8 @@
 #define OEN_STD_HYP_END			U(5)
 #define OEN_VEN_HYP_START		U(6)	/* Vendor Hypervisor Service calls */
 #define OEN_VEN_HYP_END			U(6)
+#define OEN_VEN_EL3_START		U(7)	/* Vendor EL3 Service calls */
+#define OEN_VEN_EL3_END		U(7)
 #define OEN_TAP_START			U(48)	/* Trusted Applications */
 #define OEN_TAP_END			U(49)
 #define OEN_TOS_START			U(50)	/* Trusted OS */

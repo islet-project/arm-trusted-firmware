@@ -266,7 +266,8 @@ ifeq (${ENABLE_RME},1)
 BL2_SOURCES		+=	plat/arm/board/fvp/aarch64/fvp_helpers.S
 
 BL31_SOURCES		+=	plat/arm/board/fvp/fvp_plat_attest_token.c	\
-				plat/arm/board/fvp/fvp_realm_attest_key.c
+				plat/arm/board/fvp/fvp_realm_attest_key.c \
+				plat/arm/board/fvp/fvp_realm_vhuk.c
 endif
 
 ifeq (${ENABLE_FEAT_RNG_TRAP},1)
@@ -490,6 +491,7 @@ ifneq (${PLAT_RSS_COMMS_USE_SERIAL},0)
 	               -DENABLE_CONSOLE_GETC=1
 	BL31_SOURCES += lib/psa/measured_boot.c \
 	                lib/psa/delegated_attestation.c \
+	                lib/psa/vhuk.c \
 	                ${RSS_COMMS_SOURCES}
 endif
 endif
