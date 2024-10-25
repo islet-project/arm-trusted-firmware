@@ -35,6 +35,10 @@ ENABLE_ASSERTIONS		:= ${DEBUG}
 ENABLE_PMF			:= ${ENABLE_RUNTIME_INSTRUMENTATION}
 PLAT				:= ${DEFAULT_PLAT}
 
+# Ugly workaround to support HES. We need to optimize the resulting binaries for size
+# otherwise the resulting image is too large for the FVP platform
+ENABLE_LTO := 1
+
 ################################################################################
 # Checkpatch script options
 ################################################################################
